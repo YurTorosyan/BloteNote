@@ -1,0 +1,222 @@
+.home {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 0 1rem 4rem;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.home--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── header ── */
+.home__header {
+  padding: 1.25rem 0 0;
+  margin-bottom: 1.75rem;
+}
+
+.home__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.home__wordmark {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+  color: var(--text);
+}
+
+.home__wordmark-note {
+  background: linear-gradient(135deg, var(--accent-light), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── new game CTA ── */
+.home__cta-wrap {
+  margin-bottom: 2rem;
+}
+
+.btn-new-game {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, var(--accent-light), var(--accent));
+  border: none;
+  border-radius: var(--radius-lg);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+  transition: opacity 0.15s, transform 0.12s;
+  box-shadow: 0 4px 24px rgba(124, 106, 247, 0.30);
+}
+
+.btn-new-game:hover  { opacity: 0.92; transform: translateY(-1px); }
+.btn-new-game:active { opacity: 1;    transform: translateY(0) scale(0.99); }
+
+.btn-new-game__icon {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+/* ── history section ── */
+.history-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 12px;
+}
+
+.history-badge {
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 11px;
+  padding: 1px 7px;
+  color: var(--text-dim);
+}
+
+.history-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-dim);
+}
+
+.history-empty__icon {
+  font-size: 36px;
+  display: block;
+  margin-bottom: 10px;
+  opacity: 0.5;
+}
+
+.history-empty__sub {
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+/* ── game list ── */
+.game-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ── game card ── */
+.game-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px 12px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, transform 0.12s;
+  animation: card-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.game-card:hover {
+  border-color: var(--border-strong);
+  background: var(--surface2);
+  transform: translateY(-1px);
+}
+
+.game-card:active {
+  transform: translateY(0);
+}
+
+/* top row */
+.game-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.game-card__teams {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.game-card__team {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.game-card__team--winner {
+  color: var(--text);
+}
+
+.game-card__vs {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.game-card__time {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* bottom row */
+.game-card__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.game-card__score {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  font-variant-numeric: tabular-nums;
+}
+
+.score--win  { color: var(--text); }
+.score--loss { color: var(--text-dim); }
+.score-sep   { color: var(--text-dim); font-size: 18px; }
+
+.game-card__meta {
+  display: flex;
+  gap: 6px;
+}
+
+.meta-chip {
+  font-size: 11px;
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px 8px;
+  color: var(--text-muted);
+}
+
+/* winner line */
+.game-card__winner-line {
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
