@@ -206,3 +206,72 @@
 .winner-banner__score { font-size: 28px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
 .btn-back-home { margin-top: 8px; padding: 10px 24px; background: var(--accent); border: none; border-radius: var(--radius); color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; transition: opacity 0.15s; }
 .btn-back-home:hover { opacity: 0.85; }
+
+/* Bonus count badge (×2, ×3) */
+.bchip__count {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent-light);
+  margin-left: 2px;
+}
+
+/* Made/fail icon in rounds table */
+.made-icon { font-size: 14px; line-height: 1; }
+.made-icon--ok   { filter: none; }
+.made-icon--fail { filter: grayscale(0.3); opacity: 0.85; }
+
+/* Combo clash warning */
+.combo-clash {
+  font-size: 12px;
+  color: var(--warning);
+  background: rgba(251,191,36,0.08);
+  border: 1px solid rgba(251,191,36,0.2);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Kaput bonus requirement warning */
+.kaput-warn {
+  width: 100%;
+  font-size: 11px;
+  color: var(--danger);
+  background: rgba(248,113,113,0.08);
+  border: 1px solid rgba(248,113,113,0.2);
+  border-radius: var(--radius);
+  padding: 6px 10px;
+  margin-top: 4px;
+}
+
+/* Multiple quad selections list */
+.quad-selected-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.quad-selected-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px 4px 10px;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  border-radius: 14px;
+  font-size: 12px;
+  color: var(--accent-light);
+  font-weight: 500;
+}
+.quad-selected-remove {
+  background: none;
+  border: none;
+  color: var(--accent-light);
+  opacity: 0.6;
+  cursor: pointer;
+  font-size: 11px;
+  padding: 0;
+  line-height: 1;
+  transition: opacity 0.15s;
+}
+.quad-selected-remove:hover { opacity: 1; }
