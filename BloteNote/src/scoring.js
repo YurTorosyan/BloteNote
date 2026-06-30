@@ -65,33 +65,48 @@ export function calcRound({
       made = allSmallTaken
     }
 
+    let calc
     if (made) {
       const kaputBase = 25 * mult.win + 25
       scoreDecl = kaputBase + declBonus
       scoreOpp  = oppBonus
+      calc = mult.win > 1
+        ? `Капут: 25×${mult.win}+25${declBonus > 0 ? `+${declBonus}` : ''}=${scoreDecl}`
+        : `Капут: 25+25${declBonus > 0 ? `+${declBonus}` : ''}=${scoreDecl}`
+      if (oppBonus > 0) calc += ` · сопернику бонус +${oppBonus}`
     } else {
       const kaputLose = 25 * mult.lose + 16
       scoreOpp  = kaputLose + declBonus + oppBonus
       scoreDecl = 0
+      calc = mult.lose > 1
+        ? `Капут не вышел: 25×${mult.lose}+16${(declBonus+oppBonus) > 0 ? `+${declBonus + oppBonus}` : ''}=${scoreOpp} сопернику`
+        : `Капут не вышел: 25+16${(declBonus+oppBonus) > 0 ? `+${declBonus + oppBonus}` : ''}=${scoreOpp} сопернику`
     }
-    return { scoreDecl, scoreOpp, made, declSmall }
+    return { scoreDecl, scoreOpp, made, declSmall, calc }
   }
 
   // Обычная игра
   made = (declSmall + declBonus) >= bid
 
+  let calc
   if (made) {
     // Если заказчик взял ВСЕ 16 очков, но не объявлял Капут — это "случайный капут":
     // вместо обычных карточных очков (16) даётся бонус +25
     const cardPart = declSmall === 16 ? 25 : declSmall
     scoreDecl = bid * mult.win + cardPart + declBonus
     scoreOpp  = oppSmall + oppBonus
+    const multStr = mult.win > 1 ? `${bid}×${mult.win}` : `${bid}`
+    calc = `${multStr}+${cardPart}${declBonus > 0 ? `+${declBonus}` : ''}=${scoreDecl}`
+    if (declSmall === 16) calc += ' (случайный капут, +25 вместо карт.очков)'
+    if (oppBonus > 0) calc += ` · сопернику +${oppBonus}`
   } else {
     scoreOpp  = bid * mult.lose + 16 + oppBonus + declBonus
     scoreDecl = 0
+    const multStr = mult.lose > 1 ? `${bid}×${mult.lose}` : `${bid}`
+    calc = `Не сделали: ${multStr}+16${(oppBonus+declBonus) > 0 ? `+${oppBonus + declBonus}` : ''}=${scoreOpp} сопернику`
   }
 
-  return { scoreDecl, scoreOpp, made, declSmall }
+  return { scoreDecl, scoreOpp, made, declSmall, calc }
 }
 
 export const BONUS_BELOTE = { id: 'belote', label: 'Белот', pts: 2, desc: 'К + Д козыря' }

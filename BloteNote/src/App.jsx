@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import SplashScreen from './components/SplashScreen'
 import HomePage    from './pages/HomePage'
 import SetupPage   from './pages/SetupPage'
@@ -6,10 +6,34 @@ import GamePage    from './pages/GamePage'
 import { calcRound } from './scoring'
 import './styles/globals.css'
 
+const STORAGE_KEY = 'blotenote-games-v1'
+
+function loadGames() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    return raw ? JSON.parse(raw) : []
+  } catch {
+    return []
+  }
+}
+
+function saveGames(games) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(games))
+  } catch {
+    // ignore quota errors
+  }
+}
+
 export default function App() {
   const [screen,  setScreen]  = useState('splash')
-  const [games,   setGames]   = useState([])
+  const [games,   setGames]   = useState(() => loadGames())
   const [current, setCurrent] = useState(null)
+
+  // Сохраняем в localStorage при каждом изменении истории игр
+  useEffect(() => {
+    saveGames(games)
+  }, [games])
 
   const handleSplashDone = () => setScreen('home')
   const handleNewGame    = () => setScreen('setup')
@@ -33,18 +57,18 @@ export default function App() {
     setScreen('game')
   }
 
-  // ✅ Delete game from history
   const handleDelete = (id) => {
     setGames(prev => prev.filter(g => g.id !== id))
   }
 
-  const handleAddRound = ({ declarer, suit, bid, isKaput, contra, oppSmall, declBonus, oppBonus }) => {
+  const handleAddRound = ({ declarer, suit, bid, isKaput, contra, oppSmall, declBonus, oppBonus, kaputDeclaredBonus }) => {
     setGames(prev => prev.map(g => {
       if (g.id !== current.id) return g
 
-      const { scoreDecl, scoreOpp, made, declSmall } = calcRound({
+      const { scoreDecl, scoreOpp, made, declSmall, calc } = calcRound({
         declarer, suit, bid, isKaput, contra,
         oppSmall, declBonus, oppBonus,
+        kaputDeclaredBonus,
       })
 
       const addA = declarer === 'a' ? scoreDecl : scoreOpp
@@ -62,7 +86,10 @@ export default function App() {
         }
       }
 
-      const round = { declarer, suit, bid, isKaput, contra, oppSmall, declSmall, made, scoreA: addA, scoreB: addB }
+      const round = {
+        declarer, suit, bid, isKaput, contra, oppSmall, declSmall, made,
+        scoreA: addA, scoreB: addB, calc,
+      }
       const updated = { ...g, scoreA: newScoreA, scoreB: newScoreB, rounds: [...g.rounds, round], winner }
 
       setCurrent(updated)

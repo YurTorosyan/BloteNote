@@ -449,6 +449,7 @@ export default function GamePage({ visible, game, onAddRound, onBack }) {
                 <th>{game.teamA}</th>
                 <th>{game.teamB}</th>
                 <th>Заказ</th>
+                <th>Расчёт</th>
               </tr>
             </thead>
             <tbody>
@@ -465,6 +466,7 @@ export default function GamePage({ visible, game, onAddRound, onBack }) {
                       {r.made ? '🏆' : '💥'}
                     </span>
                   </td>
+                  <td className="cell--calc">{r.calc || '—'}</td>
                 </tr>
               ))}
             </tbody>

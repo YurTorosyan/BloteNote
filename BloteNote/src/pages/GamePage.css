@@ -275,3 +275,12 @@
   transition: opacity 0.15s;
 }
 .quad-selected-remove:hover { opacity: 1; }
+
+/* Calc column */
+.cell--calc {
+  font-size: 10px;
+  color: var(--text-dim);
+  white-space: normal;
+  max-width: 140px;
+  line-height: 1.3;
+}
