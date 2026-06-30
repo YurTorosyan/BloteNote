@@ -1,57 +1,19 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import './HomePage.css'
 
-// placeholder games keyed by IP (will be replaced with real data later)
-const MOCK_GAMES = [
-  {
-    id: '1',
-    date: new Date(Date.now() - 1000 * 60 * 30),
-    teamA: 'Арам и Карен',
-    teamB: 'Ваге и Давит',
-    scoreA: 201,
-    scoreB: 154,
-    goal: 201,
-    hands: 8,
-    winner: 'a',
-  },
-  {
-    id: '2',
-    date: new Date(Date.now() - 1000 * 60 * 60 * 3),
-    teamA: 'Арам и Карен',
-    teamB: 'Ваге и Давит',
-    scoreA: 97,
-    scoreB: 301,
-    goal: 301,
-    hands: 12,
-    winner: 'b',
-  },
-  {
-    id: '3',
-    date: new Date(Date.now() - 1000 * 60 * 60 * 24),
-    teamA: 'Арам и Карен',
-    teamB: 'Ваге и Давит',
-    scoreA: 101,
-    scoreB: 88,
-    goal: 101,
-    hands: 5,
-    winner: 'a',
-  },
-]
-
-function timeAgo(date) {
-  const diff = Math.floor((Date.now() - date.getTime()) / 1000)
-  if (diff < 60)   return 'только что'
-  if (diff < 3600) return `${Math.floor(diff / 60)} мин назад`
-  if (diff < 86400)return `${Math.floor(diff / 3600)} ч назад`
+function timeAgo(ts) {
+  const diff = Math.floor((Date.now() - ts) / 1000)
+  if (diff < 60)    return 'только что'
+  if (diff < 3600)  return `${Math.floor(diff / 60)} мин назад`
+  if (diff < 86400) return `${Math.floor(diff / 3600)} ч назад`
   return `${Math.floor(diff / 86400)} д назад`
 }
 
-export default function HomePage({ visible, onNewGame }) {
+export default function HomePage({ visible, onNewGame, onContinue, onDelete, games }) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     if (visible) {
-      // slight delay so CSS transition fires after mount
       const t = setTimeout(() => setMounted(true), 30)
       return () => clearTimeout(t)
     }
@@ -60,7 +22,6 @@ export default function HomePage({ visible, onNewGame }) {
   return (
     <div className={`home${mounted ? ' home--visible' : ''}`}>
 
-      {/* ── header ── */}
       <header className="home__header">
         <div className="home__logo">
           <svg width="32" height="32" viewBox="0 0 56 56" fill="none">
@@ -79,7 +40,6 @@ export default function HomePage({ visible, onNewGame }) {
         </div>
       </header>
 
-      {/* ── new game button ── */}
       <div className="home__cta-wrap">
         <button className="btn-new-game" onClick={onNewGame}>
           <span className="btn-new-game__icon">＋</span>
@@ -87,14 +47,13 @@ export default function HomePage({ visible, onNewGame }) {
         </button>
       </div>
 
-      {/* ── history section ── */}
       <section className="home__history">
         <div className="history-label">
           История игр
-          <span className="history-badge">{MOCK_GAMES.length}</span>
+          {games.length > 0 && <span className="history-badge">{games.length}</span>}
         </div>
 
-        {MOCK_GAMES.length === 0 ? (
+        {games.length === 0 ? (
           <div className="history-empty">
             <span className="history-empty__icon">🃏</span>
             <p>Игр пока нет</p>
@@ -102,23 +61,43 @@ export default function HomePage({ visible, onNewGame }) {
           </div>
         ) : (
           <div className="game-list">
-            {MOCK_GAMES.map((g, i) => (
-              <GameCard key={g.id} game={g} index={i} />
+            {games.slice().reverse().map((g, i) => (
+              <GameCard
+                key={g.id}
+                game={g}
+                index={i}
+                onClick={() => onContinue(g)}
+                onDelete={() => onDelete(g.id)}
+              />
             ))}
           </div>
         )}
       </section>
-
     </div>
   )
 }
 
-function GameCard({ game, index }) {
-  const winnerName = game.winner === 'a' ? game.teamA : game.teamB
+function GameCard({ game, index, onClick, onDelete }) {
+  const [confirmDelete, setConfirmDelete] = useState(false)
+  const finished    = !!game.winner
+  const winnerName  = game.winner === 'a' ? game.teamA : game.teamB
+
+  const handleDelete = (e) => {
+    e.stopPropagation()
+    if (confirmDelete) {
+      onDelete()
+    } else {
+      setConfirmDelete(true)
+      // auto-reset after 3s
+      setTimeout(() => setConfirmDelete(false), 3000)
+    }
+  }
+
   return (
     <div
       className="game-card"
-      style={{ animationDelay: `${index * 70}ms` }}
+      style={{ animationDelay: `${index * 60}ms` }}
+      onClick={onClick}
     >
       <div className="game-card__top">
         <div className="game-card__teams">
@@ -130,24 +109,35 @@ function GameCard({ game, index }) {
             {game.teamB}
           </span>
         </div>
-        <span className="game-card__time">{timeAgo(game.date)}</span>
+        <div className="game-card__right">
+          <span className="game-card__time">{timeAgo(game.startedAt)}</span>
+          <button
+            className={`btn-delete${confirmDelete ? ' btn-delete--confirm' : ''}`}
+            onClick={handleDelete}
+            title={confirmDelete ? 'Нажми ещё раз для удаления' : 'Удалить игру'}
+          >
+            {confirmDelete ? '✓ Удалить?' : '✕'}
+          </button>
+        </div>
       </div>
 
       <div className="game-card__bottom">
         <div className="game-card__score">
-          <span className={game.winner === 'a' ? 'score--win' : 'score--loss'}>{game.scoreA}</span>
+          <span className={game.winner === 'a' ? 'score--win' : 'score--neutral'}>{game.scoreA}</span>
           <span className="score-sep">:</span>
-          <span className={game.winner === 'b' ? 'score--win' : 'score--loss'}>{game.scoreB}</span>
+          <span className={game.winner === 'b' ? 'score--win' : 'score--neutral'}>{game.scoreB}</span>
         </div>
-
         <div className="game-card__meta">
           <span className="meta-chip">до {game.goal}</span>
-          <span className="meta-chip">{game.hands} раздач</span>
+          <span className="meta-chip">{game.rounds.length} раздач</span>
         </div>
       </div>
 
-      <div className="game-card__winner-line">
-        🏆 {winnerName}
+      <div className="game-card__footer">
+        {finished
+          ? <span className="footer-chip footer-chip--done">🏆 {winnerName}</span>
+          : <span className="footer-chip footer-chip--active">▶ Продолжить</span>
+        }
       </div>
     </div>
   )
