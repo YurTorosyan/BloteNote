@@ -81,7 +81,10 @@ export function calcRound({
   made = (declSmall + declBonus) >= bid
 
   if (made) {
-    scoreDecl = bid * mult.win + declSmall + declBonus
+    // Если заказчик взял ВСЕ 16 очков, но не объявлял Капут — это "случайный капут":
+    // вместо обычных карточных очков (16) даётся бонус +25
+    const cardPart = declSmall === 16 ? 25 : declSmall
+    scoreDecl = bid * mult.win + cardPart + declBonus
     scoreOpp  = oppSmall + oppBonus
   } else {
     scoreOpp  = bid * mult.lose + 16 + oppBonus + declBonus

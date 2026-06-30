@@ -50,7 +50,7 @@ function BonusPanel({ label, isNotrump, onChange }) {
     let next
     if (!exists) {
       next = [...selected, { ...b, count: 1 }]
-    } else if (exists.count < 4) {
+    } else if (exists.count < 3) {
       next = selected.map(s => s.id === b.id ? { ...s, count: s.count + 1 } : s)
     } else {
       next = selected.filter(s => s.id !== b.id)

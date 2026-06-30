@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -7,31 +7,36 @@
 }
 
 :root {
-  --bg:           #0c0c14;
-  --surface:      #13131f;
-  --surface2:     #1c1c2e;
-  --surface3:     #242438;
-  --border:       rgba(255,255,255,0.07);
-  --border-strong:rgba(255,255,255,0.13);
+  /* ── "Paper" surfaces ── */
+  --bg:            #fbf9f2;
+  --surface:       #fffdf6;
+  --surface2:      #f7f4e8;
+  --surface3:      #f0ecdb;
+  --border:        rgba(30, 64, 175, 0.18);
+  --border-strong: rgba(30, 64, 175, 0.32);
 
-  --accent:       #7c6af7;
-  --accent-light: #a78bfa;
-  --accent-bg:    rgba(124,106,247,0.12);
-  --accent-border:rgba(124,106,247,0.30);
+  /* ── Blue pen ink ── */
+  --accent:        #1e40af;
+  --accent-light:  #1d4ed8;
+  --accent-bg:     rgba(30, 64, 175, 0.10);
+  --accent-border: rgba(30, 64, 175, 0.45);
 
-  --success:      #4ade80;
-  --danger:       #f87171;
-  --warning:      #fbbf24;
+  /* ── Red/green pen for grading marks ── */
+  --success:       #15803d;
+  --danger:        #b91c1c;
+  --warning:       #b45309;
 
-  --text:         #eeeef5;
-  --text-muted:   #7777a0;
-  --text-dim:     #44445a;
+  /* ── Ink colors for text (all blue pen, darker for legibility) ── */
+  --text:          #14225c;
+  --text-muted:    #2a3f8f;
+  --text-dim:      #6478b8;
 
-  --radius:       10px;
-  --radius-lg:    16px;
-  --radius-xl:    22px;
+  --radius:        3px;
+  --radius-lg:     4px;
+  --radius-xl:     6px;
 
-  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font: 'Patrick Hand', 'Comic Sans MS', cursive, sans-serif;
+  --font-script: 'Patrick Hand', 'Comic Sans MS', cursive, sans-serif;
 }
 
 html, body, #root {
@@ -39,15 +44,38 @@ html, body, #root {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font);
-  font-size: 16px;
-  line-height: 1.5;
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+}
+
+/* ── Ruled notebook paper: faint horizontal blue lines + red margin rule ── */
+body {
+  background-image:
+    linear-gradient(90deg, transparent 0 38px, rgba(185, 28, 28, 0.22) 38px 39px, transparent 39px 100%),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 33px,
+      rgba(30, 64, 175, 0.09) 33px,
+      rgba(30, 64, 175, 0.09) 34px
+    );
+  background-attachment: local, local;
 }
 
 button { font-family: var(--font); cursor: pointer; }
 input, select { font-family: var(--font); }
 
-::-webkit-scrollbar { width: 4px; }
+/* Slightly hand-drawn / sketchy borders everywhere */
+button, input, select, .bid-form, .bonus-panel, .scoreboard,
+.game-card, .rounds-table-wrap, .quad-picker {
+  border-style: solid;
+}
+
+/* Numbers/scores stay in the same legible handwriting font, just bolder via component CSS */
+
+::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
